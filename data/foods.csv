@@ -1,0 +1,13 @@
+id,name,category,protein_g,histidine_mg,isoleucine_mg,leucine_mg,lysine_mg,methionine_mg,phenylalanine_mg,threonine_mg,tryptophan_mg,valine_mg,cysteine_mg,tyrosine_mg
+lentils,Lentils (cooked),Legumes,9.0,254,390,654,630,77,445,323,81,448,118,241
+brown-rice,Brown rice (cooked),Grains,2.6,63,109,209,97,58,130,96,31,151,28,95
+chickpeas,Chickpeas (cooked),Legumes,8.9,244,380,631,593,116,475,329,85,372,119,220
+tofu,Tofu (firm),Soy,17.3,450,849,1392,908,224,869,723,235,885,220,610
+quinoa,Quinoa (cooked),Grains,4.4,127,157,261,239,96,185,131,52,185,63,83
+oats,Oats (dry),Grains,13.2,310,503,980,550,230,665,382,182,688,310,440
+almonds,Almonds,Nuts & seeds,21.2,539,751,1473,568,157,1132,601,211,855,215,450
+pumpkin-seeds,Pumpkin seeds,Nuts & seeds,30.2,780,1281,2419,1236,603,1733,998,576,1579,332,1093
+egg,Egg (cooked),Eggs & dairy,12.6,298,686,1075,904,392,668,604,153,767,292,513
+yogurt,Greek yogurt (plain),Eggs & dairy,10.0,250,550,950,850,250,480,420,130,650,60,460
+chicken,Chicken breast (cooked),Meat & fish,31.0,1130,1610,2320,2630,850,1230,1310,400,1540,360,1040
+salmon,Salmon (cooked),Meat & fish,22.0,650,1000,1770,1990,640,850,960,250,1120,240,740

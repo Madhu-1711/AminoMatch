@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174f3c">
+  <meta name="description" content="Explore foods, build a meal and understand its essential amino acid profile with AminoMatch.">
+  <title>AminoMatch · Beyond protein</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='visualizer.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='visualizer.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='phase3.js') }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <aside class="sidebar">
+    <a class="brand" href="#builder" aria-label="AminoMatch home"><span class="brand-mark">a<span>m</span></span><span>Amino<span class="brand-light">Match</span><small>BEYOND THE PROTEIN COUNT</small></span></a>
+    <div class="workspace-label">YOUR FOOD EXPLORER</div>
+    <nav aria-label="Main navigation">
+      <button class="nav-item active" data-view="builder"><span class="nav-icon" aria-hidden="true">◫</span> Meal builder</button>
+      <button class="nav-item" data-view="library"><span class="nav-icon" aria-hidden="true">▦</span> Food library</button>
+      <button class="nav-item" data-view="phase2"><span class="nav-icon" aria-hidden="true">✳</span> Discover pairings</button>
+      <button class="nav-item" data-view="phase1"><span class="nav-icon" aria-hidden="true">↶</span> Meal tools</button>
+      <button class="nav-item" data-view="visualizer"><span class="nav-icon" aria-hidden="true">⑂</span> Structure visualizer</button>
+      <button class="nav-item" data-view="phase3"><span class="nav-icon" aria-hidden="true">▥</span> Phase 3 analysis</button>
+      <button class="nav-item" data-view="roadmap"><span class="nav-icon" aria-hidden="true">◇</span> Getting started</button>
+    </nav>
+    <div class="sidebar-note"><span class="small-leaf">✳</span><strong>A little more complete.</strong><p>Explore how different foods contribute to an amino acid profile.</p><button class="text-button" data-view="method">How the scores work ↗</button></div>
+    <div class="sidebar-footer"><span class="status-dot"></span> Your own space to explore<small>ILLUSTRATIVE FOOD DATA</small></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div><span class="breadcrumb">Your space</span><span class="slash">/</span><span id="page-crumb">Meal builder</span></div><span class="project-badge">Food &amp; amino acid explorer</span></header>
+    <main id="main">
+      <div id="connection-error" class="notice error" hidden>We couldn’t load your food explorer. Check that the app is running, then <button id="retry">try again</button>.</div>
+      <section id="view-builder" class="view">
+        <div class="page-heading"><div><div class="eyebrow">GOOD PAIRINGS. BETTER PROFILES.</div><h1>Protein is only part of the story<span>.</span></h1><p>Build a meal. Explore all nine essential amino acids. Try a different mix.</p></div><button class="button secondary" data-view="method">Understand your score ↗</button></div>
+        <div class="hero-strip">
+          <div class="hero-copy"><span class="pill light">THE AMINOMATCH APPROACH</span><h2>Different foods.<br>A more complete picture.</h2><p>It’s not just how much protein you eat.<br>It’s the amino acids that come with it.</p><button class="hero-link" id="try-pair">Try lentils + brown rice ↗</button></div>
+          <div class="pair-illustration" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="ingredient ingredient-one"><span class="grain-art lentil-art"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>LENTILS</span></div><div class="pair-plus">+</div><div class="ingredient ingredient-two"><span class="grain-art rice-art"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>BROWN RICE</span></div><span class="illustration-caption">EXPLORE THE POWER OF PAIRING</span></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat"><span class="stat-icon green">▦</span><div><span class="stat-value" id="food-count">—</span><span class="stat-label">Foods to explore</span></div><span class="stat-detail">In your library</span></article>
+          <article class="stat"><span class="stat-icon peach">✳</span><div><span class="stat-value">9 <small>essential</small></span><span class="stat-label">Amino acids in focus</span></div><span class="stat-detail">Beyond total protein</span></article>
+          <article class="stat"><span class="stat-icon lavender">↶</span><div><span class="stat-value" id="saved-count">0</span><span class="stat-label">Meals waiting for review</span></div><button class="text-button" data-view="phase1">Review →</button></article>
+        </div>
+        <div class="builder-grid">
+          <section class="panel meal-panel">
+            <div class="panel-heading"><div><span class="section-kicker">01 / CREATE</span><h2>Your meal, your mix</h2></div><span class="tag" id="portion-count">0 portions</span></div>
+            <p class="panel-description">Choose a food and the weight of the portion you’ll eat.</p>
+            <form id="meal-form" class="meal-form"><div class="field food-field"><label for="food-select">Food item</label><select id="food-select" name="food" required><option value="">Loading foods…</option></select></div><div class="field serving-field"><label for="grams">Serving</label><div class="unit-input"><input id="grams" name="grams" type="number" min="1" max="2000" step="0.1" value="100" required><span>g</span></div></div><button class="button primary add-button" type="submit" aria-label="Add food to meal">+ Add</button></form>
+            <div id="meal-list" class="meal-list"></div>
+            <div class="meal-totals"><span>Total protein <strong id="total-protein">0 <small>g</small></strong></span><span>Essential amino acids <strong id="total-eaa">0 <small>mg</small></strong></span></div>
+            <div class="meal-actions"><button class="text-button" id="undo" disabled>↶ Undo last change</button><button class="text-button muted" id="clear" disabled>Clear meal</button></div>
+            <div class="ds-note"><span>↶</span><p><strong>Try a mix. Change your mind.</strong>Undo brings back your meal before the last edit. <button class="inline-link" data-view="phase1">Open meal tools ↗</button></p></div>
+          </section>
+          <section class="panel profile-panel">
+            <div class="panel-heading"><div><span class="section-kicker">02 / UNDERSTAND</span><h2>The amino acid picture</h2></div><span class="tag neutral">LIVE PROFILE</span></div>
+            <div id="profile-summary" class="profile-summary"><div class="score-ring" style="--score:0"><span id="score">—<small>pattern score</small></span></div><div><h3 id="profile-title">Let’s see your profile</h3><p id="profile-subtitle">Add a food to begin exploring.</p></div></div>
+            <div class="chart-legend"><span><i></i>Compared with the adult reference</span><span>Reference 100%</span></div><div id="amino-bars" class="amino-bars"></div>
+            <div class="chart-footnote">100% means matching this amino acid’s proportion in the adult reference—not meeting your daily needs. Two groups include the supporting amino acids cysteine and tyrosine.</div>
+          </section>
+        </div>
+        <div class="bottom-grid"><article class="insight-card"><div class="insight-symbol">↗</div><div><span class="section-kicker">A LITTLE FOOD FOR THOUGHT</span><h3 id="insight-title">Aim for balance, not just a bigger number.</h3><p id="insight-text">Explore the amino acid proportions in your meal.</p><button class="text-button" data-view="phase2">Explore pairing ideas →</button></div></article><article class="queue-callout"><span class="section-kicker">KEEP A COPY TO REVIEW</span><h3>Come back to this combination.</h3><p>Keep this version unchanged while you try another mix. Review saved meals in the order you saved them.</p><button id="queue-meal" class="text-button" disabled>Save meal for review →</button></article></div>
+      </section>
+
+      <section id="view-library" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">KNOW YOUR INGREDIENTS</div><h1>The food library<span>.</span></h1><p>Look beyond grams of protein. Food values are shown per 100 g.</p></div></div>
+        <div class="panel import-panel"><div><span class="section-kicker">YOUR FOOD DATA</span><h2>Bring your own food list</h2><p>Download the spreadsheet template, fill in your values and upload it as a UTF-8 CSV. We check every row before replacing your library.</p><span id="dataset-source" class="tag"></span></div><div class="import-actions"><a class="button secondary" href="/api/dataset/template">↓ Download CSV template</a><form id="import-form"><label for="csv-file" class="sr-only">Food data CSV file</label><input id="csv-file" type="file" accept=".csv,text/csv" required><button class="button primary" type="submit">Import CSV</button></form><button class="text-button muted" id="reset-dataset">Restore starter foods</button></div></div>
+        <p class="small-note">Importing or restoring replaces this browser’s food list and clears its meal, edit history and saved reviews. Maximum 250 foods / 1 MB. Missing amino acid values are rejected, not treated as zero.</p>
+        <div class="library-toolbar"><div class="search-input"><span aria-hidden="true">⌕</span><label class="sr-only" for="library-search">Search foods</label><input id="library-search" type="search" placeholder="Search your food library…"></div><label class="sr-only" for="category-filter">Filter food category</label><select id="category-filter"><option value="">All categories</option></select><span id="library-count" class="muted"></span></div><div id="food-grid" class="food-grid"></div>
+      </section>
+
+      <section id="view-phase1" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">A LITTLE HELP WITH THE DETAILS</div><h1>Make room to experiment<span>.</span></h1><p>Revisit a meal, undo an edit or work out an amount. Your food, at your pace.</p></div><button class="button secondary" data-view="builder">Back to your meal →</button></div>
+        <div class="lab-grid">
+          <article class="panel lab-card"><span class="section-kicker">CHANGE YOUR MIND</span><h2>One step back</h2><p>Restore your meal before the most recent change. You can undo again to go back another step.</p><div id="stack-visual" class="history-summary"></div><button class="button secondary" id="lab-undo" disabled>↶ Undo last change</button></article>
+          <article class="panel lab-card"><span class="section-kicker">SAVED FOR REVIEW</span><h2>Your combinations, kept as they were</h2><p>Save the current meal, then keep experimenting. Review the oldest saved meal first; it leaves this list once reviewed.</p><div id="queue-visual" class="saved-meals"></div><div class="button-row"><button id="lab-enqueue" class="button secondary" disabled>Save current meal</button><button id="process-queue" class="button primary" disabled>Review next meal →</button></div><div id="queue-result" class="result-box" hidden aria-live="polite"></div><p class="small-note">Up to 20 waiting meals. Saved copies last only while this app session is available; they are not a permanent meal diary.</p></article>
+        </div>
+        <article class="panel lab-card"><span class="section-kicker">QUICK CALCULATOR</span><h2>Work out your amounts</h2><p>For example, if a food has 9 g of protein per 100 g, enter 9 * 150 / 100 to calculate the protein in a 150 g serving.</p><form id="expression-form" class="inline-form"><label class="sr-only" for="expression">Calculation</label><input id="expression" value="9 * 150 / 100" maxlength="200" required aria-describedby="calculator-help"><button class="button primary">Calculate →</button></form><p id="calculator-help" class="small-note">Use numbers, +, -, * (multiply), / (divide) and parentheses. For negative numbers, use (0 - number). Powers are not supported. This calculator does not change your meal.</p><div id="expression-result" aria-live="polite"></div></article>
+        <article class="panel lab-card"><span class="section-kicker">YOUR COLLECTION</span><h2>Everything in your food list</h2><p>Browse foods in the order they were added to your library. Select one to see its amino acid amounts.</p><div id="linked-visual" class="collection-list"></div><button class="text-button" data-view="library">Manage your food library ↗</button></article>
+        <article class="panel lab-card"><span class="section-kicker">FOOD LIST CHECK</span><h2>A second check on the total</h2><p>We add up the protein values in your library in two different ways and compare the totals.</p><div id="efficiency" class="efficiency-grid" aria-live="polite"></div><p class="small-note">This adds the protein in 100 g of every food in the library. It is a data check, not your meal total or a suggested amount to eat.</p></article>
+      </section>
+
+      <section id="view-phase2" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">FIND YOUR NEXT INGREDIENT</div><h1>A little inspiration for your mix<span>.</span></h1><p>Choose a food to explore pairing ideas, or find something new in your library.</p></div></div>
+        <article class="panel lab-card">
+          <div class="panel-heading"><div><span class="section-kicker">PAIRING IDEAS</span><h2>What could go with this?</h2></div><div class="field"><label for="graph-start">Choose a food</label><select id="graph-start"></select></div></div>
+          <p>These ideas compare 100 g of each food together. The pair scores more than 5 percentage points above the lower-scoring food on its own—not necessarily above both foods.</p>
+          <div id="pairing-source" class="pairing-source"></div>
+          <div id="graph-visual" class="pairing-grid" aria-live="polite"></div>
+          <p class="small-note">Ideas use your current food data, not your current meal or dietary preferences. A pairing does not guarantee all amino acid groups meet the reference. Add foods to your meal to see the result for your portions.</p>
+          <details class="discovery-more"><summary>More foods to explore</summary><p>Follow on from these pairings to discover other foods. These are related ideas, not necessarily a match for your selected food. Select a food to see its own pairing ideas.</p><div id="bfs-result" class="explore-list"></div></details>
+        </article>
+        <article class="panel lab-card"><span class="section-kicker">HAVE SOMETHING IN MIND?</span><h2>Find a food by name</h2><p>Choose a full food name from the suggestions to see its details or add a portion.</p><form id="binary-form" class="inline-form"><label class="sr-only" for="binary-target">Full food name</label><input id="binary-target" list="food-names" placeholder="e.g. Lentils (cooked)" required maxlength="80"><datalist id="food-names"></datalist><button class="button primary">Find food →</button></form><div id="binary-result" aria-live="polite"></div></article>
+        <article class="panel lab-card"><div class="panel-heading"><div><span class="section-kicker">EXPLORE YOUR OPTIONS</span><h2>Browse the collection</h2></div><div class="field"><label for="traversal-order">Browse order</label><select id="traversal-order"><option value="inorder">A to Z</option><option value="preorder">Middle entries first</option><option value="postorder">Outer entries first</option></select></div></div><p>See every food in your library. Alternative orders change where you start browsing; they do not rank foods by nutrition.</p><div id="traversal-result" class="browse-grid" aria-live="polite"></div></article>
+      </section>
+
+      <section id="view-visualizer" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">PHASES 1 &amp; 2 / LIVE DATA</div><h1>Structures in motion<span>.</span></h1></div></div>
+        <div class="viz-options">
+          <div class="field"><label for="viz-topic">Structure</label><select id="viz-topic"><option value="tree">Binary tree &amp; traversals</option><option value="bfs">Graph, BFS &amp; adjacency list</option><option value="list">Singly linked practice list</option><option value="stack">Meal undo stack</option><option value="queue">Meal analysis queue</option></select></div>
+          <div class="field" id="viz-order-field"><label for="viz-order">Traversal order</label><select id="viz-order"><option value="inorder">Inorder: left, root, right</option><option value="preorder">Preorder: root, left, right</option><option value="postorder">Postorder: left, right, root</option></select></div>
+          <div class="field" id="viz-start-field" hidden><label for="viz-start">BFS starting food</label><select id="viz-start"></select></div>
+          <button class="button secondary" id="viz-refresh">Refresh data</button>
+        </div>
+        <div id="viz-error" class="notice error" hidden role="alert"></div>
+        <div id="viz-content" aria-busy="false">
+          <div class="viz-playback" id="viz-playback">
+            <button class="icon-button" id="viz-reset" title="Reset traversal" aria-label="Reset traversal">↺</button>
+            <button class="icon-button" id="viz-prev" title="Previous step" aria-label="Previous step">◀</button>
+            <button class="icon-button" id="viz-play" title="Play traversal" aria-label="Play traversal">▶</button>
+            <button class="icon-button" id="viz-next" title="Next step" aria-label="Next step">▶|</button>
+            <label for="viz-step" class="sr-only">Traversal step</label><input id="viz-step" type="range" min="0" max="0" value="0">
+            <output id="viz-position" for="viz-step">0 / 0</output>
+            <label for="viz-speed">Speed</label><select id="viz-speed"><option value="1400">Slow</option><option value="800" selected>Normal</option><option value="350">Fast</option></select>
+          </div>
+          <div class="viz-legend"><span><i class="viz-key-current"></i>Current</span><span><i class="viz-key-visited"></i>Visited</span><span><i class="viz-key-pending"></i>Waiting</span><span>Unfilled: not visited</span></div>
+          <p id="viz-status" class="viz-status" role="status" aria-live="polite"></p>
+          <div id="viz-diagram" class="viz-diagram" tabindex="0" role="region" aria-label="Structure diagram"></div>
+          <div id="viz-sequence" class="viz-sequence"></div>
+          <div id="viz-details"></div>
+          <form id="viz-list-actions" class="viz-options" hidden>
+            <div class="field"><label for="viz-list-operation">List operation</label><select id="viz-list-operation"><option value="append">Append at tail</option><option value="insert">Insert at index</option><option value="remove">Delete at index</option><option value="search">Search value</option><option value="clear">Clear list</option><option value="reset">Restore food names</option></select></div>
+            <div class="field"><label for="viz-list-value">Node value</label><input id="viz-list-value" maxlength="80" required placeholder="e.g. Lentils"></div>
+            <div class="field"><label for="viz-list-index">Index (zero-based)</label><input id="viz-list-index" type="number" min="0" step="1" value="0" disabled></div>
+            <button class="button primary" id="viz-list-run" type="submit">Run operation</button>
+          </form>
+          <div id="viz-stack-actions" class="viz-options" hidden><div class="field"><label for="viz-food">Food to add to the current meal</label><select id="viz-food"></select></div><button class="button primary" id="viz-push">Add 100 g &amp; push previous meal</button><button class="button secondary" id="viz-pop">Pop &amp; undo last change</button><button class="text-button" data-view="builder">See current meal →</button></div>
+          <div id="viz-queue-actions" class="viz-options" hidden><button class="button primary" id="viz-enqueue">Enqueue current meal</button><button class="button secondary" id="viz-dequeue">Dequeue &amp; analyze front</button></div>
+        </div>
+      </section>
+
+      <section id="view-phase3" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">PHASE 3 / FOOD ANALYSIS</div><h1>Compare. Search. Prioritize<span>.</span></h1></div></div>
+        <form id="phase3-analysis-form" class="viz-options">
+          <div class="field"><label for="phase3-metric">Rank by</label><select id="phase3-metric"><option value="protein_g">Protein (g / 100 g food)</option><option value="essential_mg">Essential amino acids (mg / 100 g food)</option><option value="score">Reference-pattern score (%)</option></select></div>
+          <div class="field"><label for="phase3-direction">Order</label><select id="phase3-direction"><option value="descending">Highest first</option><option value="ascending">Lowest first</option></select></div>
+          <div class="field"><label for="phase3-category">Category</label><select id="phase3-category"><option value="">All categories</option></select></div>
+          <div class="field"><label for="phase3-target">Exact food name</label><input id="phase3-target" list="food-names" maxlength="80" placeholder="e.g. Lentils (cooked)"></div>
+          <button id="phase3-analyze" class="button primary" type="submit">Analyze</button>
+        </form>
+        <div id="phase3-error" class="notice error" role="alert" hidden></div>
+        <div class="viz-options"><div class="field"><label for="phase3-mode">Analysis view</label><select id="phase3-mode"><option value="sort">Merge sort</option><option value="search">Linear search</option><option value="binary">Binary search</option><option value="heap">Heap &amp; priority processing</option><option value="heatmap">Amino acid heatmap</option></select></div></div>
+        <div id="phase3-content" hidden>
+          <div id="phase3-summary" class="phase3-summary"></div>
+          <p id="phase3-search-outcome" class="viz-status" role="status"></p>
+          <form id="phase3-push-form">
+            <div id="phase3-heap-actions" class="viz-options" hidden>
+              <div class="field"><label for="phase3-food">Food to queue (100 g)</label><select id="phase3-food"></select></div>
+              <div class="field"><label for="phase3-priority-metric">Priority metric</label><select id="phase3-priority-metric"><option value="protein_g">Protein (g / 100 g food)</option></select></div>
+              <button id="phase3-push" class="button primary" type="submit">Insert into heap</button>
+              <button id="phase3-pop" class="button secondary" type="button">Process highest priority</button>
+              <button id="phase3-clear" class="button secondary" type="button">Clear queue</button>
+            </div>
+          </form>
+          <p id="phase3-operation" class="viz-status" role="status"></p>
+          <div id="phase3-playback" class="viz-playback">
+            <button class="icon-button" id="phase3-reset" title="Reset steps" aria-label="Reset Phase 3 steps">↺</button>
+            <button class="icon-button" id="phase3-prev" title="Previous step" aria-label="Previous Phase 3 step">◀</button>
+            <button class="icon-button" id="phase3-play" title="Play steps" aria-label="Play Phase 3 steps">▶</button>
+            <button class="icon-button" id="phase3-next" title="Next step" aria-label="Next Phase 3 step">▶|</button>
+            <label for="phase3-step" class="sr-only">Algorithm step</label><input id="phase3-step" type="range" min="0" max="0" value="0">
+            <output id="phase3-position" for="phase3-step">0 / 0</output>
+            <label for="phase3-speed">Speed</label><select id="phase3-speed"><option value="1400">Slow</option><option value="800" selected>Normal</option><option value="350">Fast</option></select>
+          </div>
+          <p id="phase3-status" class="viz-status" role="status"></p>
+          <div id="phase3-diagram" class="viz-diagram" tabindex="0" role="region" aria-label="Phase 3 analysis diagram"></div>
+          <div id="phase3-heap-array" class="viz-sequence"></div>
+          <p id="phase3-complexity" class="small-note"></p>
+          <div class="table-wrap"><table><caption id="phase3-table-caption">Ranked foods</caption><thead><tr><th scope="col">Rank</th><th scope="col">Food</th><th scope="col">Category</th><th scope="col" id="phase3-value-label">Value</th><th scope="col">Groups met</th></tr></thead><tbody id="phase3-rows"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="view-roadmap" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">START SMALL. EXPLORE MORE.</div><h1>Get to know your food<span>.</span></h1><p>No special knowledge needed. Pick a starting point and follow your curiosity.</p></div></div>
+        <div class="roadmap-grid">
+          <article class="panel roadmap-card"><span class="roadmap-number">01</span><h2>Build your first mix</h2><p>Add a food and its serving weight. Your protein and amino acid amounts update as you go.</p><ul><li>Try the lentil and rice example</li><li>Compare the nine amino acid groups</li><li>Undo an edit whenever you need to</li></ul><button class="text-button" data-view="builder">Build a meal →</button></article>
+          <article class="panel roadmap-card"><span class="roadmap-number">02</span><h2>Find a pairing idea</h2><p>Select a food and explore foods that pair with it under our illustrative comparison.</p><ul><li>See food names and useful actions</li><li>Explore related ideas at your own pace</li><li>Find a food or browse the collection</li></ul><button class="text-button" data-view="phase2">Discover pairings →</button></article>
+          <article class="panel roadmap-card"><span class="roadmap-number">03</span><h2>Keep experimenting</h2><p>Save a meal for review before changing the mix. Use the calculator to work out amounts separately.</p><ul><li>Review saved meals, oldest first</li><li>Return to your previous meal edit</li><li>Check the totals in your food list</li></ul><button class="text-button" data-view="phase1">Open meal tools →</button></article>
+          <article class="panel roadmap-card"><span class="roadmap-number">04</span><h2>Know what’s in the numbers</h2><p>Explore individual foods or import your own food data. Read how scores are calculated and what they cannot tell you.</p><button class="text-button" data-view="library">Explore the food library →</button><button class="text-button" data-view="method">Understand the scores →</button></article>
+        </div>
+        <p class="small-note">Your explorations stay in this browser session while the app is running. They are not a permanent food diary.</p>
+      </section>
+
+      <section id="view-method" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">TRANSPARENT BY DESIGN</div><h1>A closer look at the numbers<span>.</span></h1><p>Understand the comparison before drawing conclusions.</p></div></div>
+        <article class="panel lab-card prose"><h2>What does the score mean?</h2><p>Your body needs nine essential amino acids from food: histidine, isoleucine, leucine, lysine, methionine, phenylalanine, threonine, tryptophan and valine. Protein grams alone do not show their proportions.</p><p>We compare those proportions with an adult reference pattern. The pattern score is the lowest of the nine group percentages. All nine must reach 100% for the label “Meets the reference pattern.” Percentages above 100% are shown, while the bars stop at 100%.</p><h2>Why are two groups combined?</h2><p>The WHO/FAO/UNU 2007 adult scoring pattern groups methionine + cysteine and phenylalanine + tyrosine. Cysteine and tyrosine are supporting amino acids, not part of the nine-essential-amino-acid total. They are included only in the group comparison.</p><h2>What it does not tell you</h2><ul><li>This is not a daily requirement tracker. A small portion can meet the pattern without supplying enough total food or protein.</li><li>This is not DIAAS or PDCAAS: digestion, absorption and amino acid availability are not modeled.</li><li>Complementary foods do not necessarily need to be eaten in the same meal.</li><li>Starter values are illustrative, not verified measurements. Uploaded values are not independently verified either. Food preparation and source quality matter.</li><li>Pairing ideas compare equal 100 g portions and are not personalized dietary recommendations.</li></ul><details class="discovery-more"><summary>See the formulas and reference values</summary><div class="formula">Amount in serving (mg) = food value per 100 g × serving grams ÷ 100</div><div class="formula">Group coverage (%) = group amount (mg) ÷ [meal protein (g) × reference (mg/g)] × 100</div><div class="table-wrap"><table><caption>WHO/FAO/UNU 2007 adult reference pattern · mg per gram of protein</caption><thead><tr><th>Scoring group</th><th>mg/g protein</th></tr></thead><tbody id="reference-table"></tbody></table></div></details><h2>Your session</h2><p>Your food list, meal, edit history and saved reviews stay in this browser session while the server is running. Restarting the app clears them. There is no permanent storage.</p></article>
+      </section>
+      <div class="disclaimer"><span>ⓘ</span><p><strong>Made for exploration, not dietary decisions.</strong> Starter food values are illustrative. Scores compare amino acid proportions with an adult reference, not daily requirements; digestibility is not included.</p></div>
+      <footer class="page-footer"><span>AminoMatch <span>·</span> Beyond the protein count.</span><span>Explore your food. Understand your mix.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="food-dialog"><div class="dialog-heading"><span class="section-kicker">FOOD PROFILE / PER 100 G</span><button id="close-dialog" class="icon-button" aria-label="Close food profile">×</button></div><div id="food-detail"></div></dialog>
+  <dialog id="confirm-dialog"><h2>Replace your food list?</h2><p>This clears the current meal, edit history and saved reviews in this browser.</p><div class="button-row"><button id="cancel-replace" class="button secondary">Cancel</button><button id="confirm-replace" class="button primary">Replace food list</button></div></dialog>
+</body>
+</html>
