@@ -142,6 +142,18 @@
         </form>
         <div id="phase3-error" class="notice error" role="alert" hidden></div>
         <div class="viz-options"><div class="field"><label for="phase3-mode">Analysis view</label><select id="phase3-mode"><option value="sort">Merge sort</option><option value="search">Linear search</option><option value="binary">Binary search</option><option value="heap">Heap &amp; priority processing</option><option value="heatmap">Amino acid heatmap</option></select></div></div>
+        <div id="phase3-search-source-field" class="viz-options" hidden><div class="field"><label for="phase3-search-source">Search in</label><select id="phase3-search-source"><option value="practice">My elements (shared practice list)</option><option value="foods">Ranked foods</option></select></div></div>
+        <div id="phase3-elements" hidden>
+          <form id="phase3-insert-form" class="viz-options">
+            <div class="field"><label for="phase3-element">Element</label><input id="phase3-element" required maxlength="80" placeholder="e.g. 25 or Apple"></div>
+            <button id="phase3-insert" class="button primary" type="submit">Insert element</button>
+            <button id="phase3-elements-clear" class="button secondary" type="button">Clear list</button>
+          </form>
+          <form id="phase3-element-search-form" class="viz-options">
+            <div class="field"><label for="phase3-element-target">Search element</label><input id="phase3-element-target" required maxlength="80" placeholder="e.g. 25 or Apple"></div>
+            <button id="phase3-element-search" class="button primary" type="submit">Search</button>
+          </form>
+        </div>
         <div id="phase3-content" hidden>
           <div id="phase3-summary" class="phase3-summary"></div>
           <p id="phase3-search-outcome" class="viz-status" role="status"></p>

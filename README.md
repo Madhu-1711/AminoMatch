@@ -36,6 +36,8 @@ The current workspace already has a configured virtual environment. In VS Code, 
 
 In **Structure visualizer**, select **Singly linked practice list** to run list operations. Indices start at zero; search returns the first match and highlights the visited nodes. Practice values are limited to 80 characters and the list to 250 nodes. This list starts with food names but is independent of the nutrition dataset. Clear affects only the practice list; restore reloads the current food names. A dataset replacement also resets the practice list.
 
+In **Phase 3 analysis**, select **Linear search**, then **My elements (shared practice list)**. Use **Clear list** to start empty, enter a number or text and select **Insert element** to append it. Enter a **Search element** and select **Search**, then use the playback controls to inspect each comparison. Values are compared as case-insensitive text in insertion order; the first match has a zero-based index. This is the same practice list used by Structure visualizer, not a nutrition-data editor. Choose **Ranked foods** to return to food-name search.
+
 Select **Meal undo stack** to add a 100 g portion and push the previous meal, then pop to restore it (LIFO). Select **Meal analysis queue** to enqueue the current meal snapshot, change the meal, and enqueue again. **Dequeue & analyze front** processes the oldest saved snapshot (FIFO); the result appears below the diagram. Queue capacity is 20 meals. All operations run in Python and remain isolated to the browser session.
 
 ## Phase requirements and implementations
